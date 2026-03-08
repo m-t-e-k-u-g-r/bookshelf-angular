@@ -1,6 +1,8 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {BookComponent} from '../book/book.component';
 import {BookService} from '../../services/book.service';
+import {ShelfService} from '../../services/shelf.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-shelf',
@@ -8,7 +10,17 @@ import {BookService} from '../../services/book.service';
   templateUrl: './shelf.component.html',
   styleUrl: './shelf.component.css',
 })
-export class ShelfComponent {
+export class ShelfComponent implements OnInit {
   bookService = inject(BookService);
-  shelf = signal('Books');
+  shelfService = inject(ShelfService);
+  shelf = signal('Books')
+  shelfId?: string;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.shelfId = params.get('shelfId') ?? undefined;
+    })
+  }
 }

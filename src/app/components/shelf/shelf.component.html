@@ -1,5 +1,9 @@
 <div class="shelf">
-  <h2>{{ shelf() }}</h2>
+  <h2>@if (shelfId) {
+    {{ shelfId }}
+  } @else {
+    {{ shelf() }}
+  }</h2>
   <section class="shelf">
     @if (shelfId !== undefined) {
       @for (book of shelfService.shelvedBooks(); track book.isbn) {

@@ -1,6 +1,8 @@
 <main>
-  <h1 [routerLink]="['/']">
+  <h1>
+    <a routerLink="/">
     {{ title() }}
+    </a>
   </h1>
-  <router-outlet></router-outlet>
+  <router-outlet />
 </main>

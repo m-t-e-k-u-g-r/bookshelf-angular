@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { environment} from '../../environments/environment.development';
 import {Book} from '../models/book.type';
@@ -11,6 +11,7 @@ import {removeHyphen} from '../utils/utils';
 export class BookService {
   baseUrl = environment.apiUrl + 'db/books/';
   http = inject(HttpClient);
+  books = signal<Book[]>([]);
 
   getBooks() {
     return this.http.get<Book[]>(this.baseUrl)
@@ -18,6 +19,7 @@ export class BookService {
         catchError(err => {
           console.error('Failed to load books', err);
 
+          this.books.set([]);
           return of([]);
         })
       )

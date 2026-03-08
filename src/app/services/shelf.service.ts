@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import {Injectable, inject, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { environment} from '../../environments/environment.development';
 import {BookWithShelf} from '../models/book.type';
@@ -12,15 +12,22 @@ export class ShelfService {
   baseUrl = environment.apiUrl + 'db/shelves/'
   http = inject(HttpClient);
 
+  shelvedBooks = signal<BookWithShelf[]>([]);
+  shelfNames = signal<string[]>([]);
+  sidebarData = signal<SidebarData[]>([]);
+
   getShelvedBooks() {
     return this.http.get<BookWithShelf[]>(this.baseUrl)
       .pipe(
         catchError(err => {
           console.error('Failed to load shelved books', err);
 
-          return of([])
+          this.shelvedBooks.set([]);
+          return of([]);
         })
-      );
+      ).subscribe(books => {
+        this.shelvedBooks.set(books);
+      });
   }
 
   getAllShelves() {
@@ -28,9 +35,11 @@ export class ShelfService {
       .pipe(
         catchError(err => {
           console.error('Failed to load shelf names', err);
-          return [];
+          return of([]);
         })
-      );
+      ).subscribe(shelves => {
+        this.shelfNames.set(shelves);
+      });
   }
 
   getShelvesOfBook(isbn: string) {
@@ -48,9 +57,12 @@ export class ShelfService {
       .pipe(
         catchError(err => {
           console.error('Failed to load sidebar data', err);
-          return [];
+          this.sidebarData.set([]);
+          return of([]);
         })
-      );
+      ).subscribe(sidebarData => {
+        this.sidebarData.set(sidebarData);
+      });
   }
 
   createShelf(shelfName: string) {

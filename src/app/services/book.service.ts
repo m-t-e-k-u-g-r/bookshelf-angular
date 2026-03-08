@@ -22,7 +22,9 @@ export class BookService {
           this.books.set([]);
           return of([]);
         })
-      )
+      ).subscribe(books => {
+        this.books.set(books);
+      })
   }
 
   addBook(isbn: string) {

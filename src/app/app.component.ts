@@ -1,10 +1,13 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {BookService} from './services/book.service';
 import {ShelfService} from './services/shelf.service';
+import {ShelfComponent} from './components/shelf/shelf.component';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [
+    ShelfComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

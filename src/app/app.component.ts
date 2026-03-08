@@ -3,9 +3,9 @@ import { Component, signal } from '@angular/core';
 @Component({
   selector: 'app-root',
   imports: [],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
 })
-export class App {
+export class AppComponent {
   title = signal('Bookshelf (Angular)')
 }

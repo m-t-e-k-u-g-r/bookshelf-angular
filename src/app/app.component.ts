@@ -2,12 +2,14 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {BookService} from './services/book.service';
 import {ShelfService} from './services/shelf.service';
 import {RouterLink, RouterOutlet} from '@angular/router';
+import {SidebarComponent} from './components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    RouterLink
+    RouterLink,
+    SidebarComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

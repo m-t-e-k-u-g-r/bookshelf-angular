@@ -1,4 +1,6 @@
-import { Component, signal } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {BookService} from './services/book.service';
+import {ShelfService} from './services/shelf.service';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +8,15 @@ import { Component, signal } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = signal('Bookshelf (Angular)')
+export class AppComponent implements OnInit {
+  title = signal('Bookshelf (Angular)');
+  bookService = inject(BookService);
+  shelfService = inject(ShelfService);
+
+  ngOnInit() {
+    this.bookService.getBooks();
+    this.shelfService.getShelvedBooks();
+    this.shelfService.getAllShelves();
+    this.shelfService.getSidebarData();
+  }
 }

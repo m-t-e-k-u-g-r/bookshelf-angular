@@ -1,0 +1,14 @@
+<div>
+  <nav>
+    <button (click)="openPrompt()">
+      Add Book
+    </button>
+  </nav>
+  <app-prompt-component
+    [open]="promptOpen()"
+    (close)="onClose()"
+    [title]="'Add Book'"
+    [message]="'Enter ISBN'"
+    (submit)="addBook($event)"
+  />
+</div>

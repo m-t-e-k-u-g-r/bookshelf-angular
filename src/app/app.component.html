@@ -1,9 +1,12 @@
 <main>
+  <app-nav />
   <h1>
     <a routerLink="/">
     {{ title() }}
     </a>
   </h1>
-  <app-sidebar />
-  <router-outlet />
+  <div class="container">
+    <app-sidebar />
+    <router-outlet />
+  </div>
 </main>

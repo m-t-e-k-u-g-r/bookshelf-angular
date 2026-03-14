@@ -1,11 +1,13 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, ElementRef, inject, signal, ViewChild} from '@angular/core';
 import {PromptComponent} from '../prompt/prompt.component';
 import {BookService} from '../../services/book.service';
+import {CombinedInputComponent} from '../combined-input/combined-input.component';
 
 @Component({
   selector: 'app-nav',
   imports: [
-    PromptComponent
+    PromptComponent,
+    CombinedInputComponent
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',
@@ -13,9 +15,14 @@ import {BookService} from '../../services/book.service';
 export class NavComponent {
   bookService = inject(BookService);
   promptOpen = signal(false);
+  @ViewChild('combinedInput') dialog!: ElementRef<HTMLDialogElement>;
 
   openPrompt() {
     this.promptOpen.set(true);
+  }
+
+  openDialog() {
+    this.dialog.nativeElement.showModal();
   }
 
   addBook(isbn: string) {
@@ -32,5 +39,9 @@ export class NavComponent {
 
   onClose() {
     this.promptOpen.set(false);
+  }
+
+  onCloseDialog() {
+    this.dialog.nativeElement.close();
   }
 }

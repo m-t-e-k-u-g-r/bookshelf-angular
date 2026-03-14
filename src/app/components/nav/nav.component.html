@@ -3,6 +3,9 @@
     <button (click)="openPrompt()">
       Add Book
     </button>
+    <button (click)="openDialog()">
+      Add Batch
+    </button>
   </nav>
   <app-prompt-component
     [open]="promptOpen()"
@@ -11,4 +14,9 @@
     [message]="'Enter ISBN'"
     (submit)="addBook($event)"
   />
+  <dialog #combinedInput>
+    <app-combined-input
+      (close)="onCloseDialog()"
+    />
+  </dialog>
 </div>

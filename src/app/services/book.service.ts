@@ -41,12 +41,10 @@ export class BookService {
 
   addBatch(batch: string[]) {
     if (batch.length <= 0) return throwError(() => 'Empty batch');
-    return this.http.post(this.baseUrl + 'batch', {
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        isbns: batch
-      })
-    }).pipe(
+    return this.http.post(this.baseUrl + 'batch',
+      { isbns: batch },
+      {headers: {'Content-Type': 'application/json'}}
+    ).pipe(
       catchError(err => {
         console.error('Failed to add batch', err);
         return throwError(() => err);

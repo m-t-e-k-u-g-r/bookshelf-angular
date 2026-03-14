@@ -76,15 +76,10 @@ export class ShelfService {
   }
 
   renameShelf(oldName: string, newName: string) {
-    return this.http.put(this.baseUrl, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        oldShelfName: oldName,
-        newShelfName: newName
-      })
-    }).pipe(
+    return this.http.put(this.baseUrl,
+      { oldShelfName: oldName, newShelfName: newName},
+      { headers: {'Content-Type': 'application/json'} }
+    ).pipe(
       catchError(err => {
         console.log('Failed to rename shelf', err);
         return throwError(() => err);
@@ -103,13 +98,10 @@ export class ShelfService {
   }
 
   editShelvesOfBook(isbn: string, shelves: string[]) {
-    return this.http.post(this.baseUrl, {
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        isbn: isbn,
-        shelves: shelves
-      })
-    }).pipe(
+    return this.http.post(this.baseUrl,
+      { isbn: isbn, shelves: shelves},
+      { headers: {'Content-Type': 'application/json'} }
+    ).pipe(
       catchError(err => {
         console.error('Failed to edit shelves', err);
         return throwError(() => err);

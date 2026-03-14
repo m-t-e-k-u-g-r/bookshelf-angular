@@ -9,7 +9,30 @@ import {CombinedInputComponent} from '../combined-input/combined-input.component
     PromptComponent,
     CombinedInputComponent
   ],
-  templateUrl: './nav.component.html',
+  template: `
+    <div>
+      <nav>
+        <button (click)="openPrompt()">
+          Add Book
+        </button>
+        <button (click)="openDialog()">
+          Add Batch
+        </button>
+      </nav>
+      <app-prompt-component
+        [open]="promptOpen()"
+        (close)="onClose()"
+        [title]="'Add Book'"
+        [message]="'Enter ISBN'"
+        (submit)="addBook($event)"
+      />
+      <dialog #combinedInput>
+        <app-combined-input
+          (close)="onCloseDialog()"
+        />
+      </dialog>
+    </div>
+  `,
   styleUrl: './nav.component.css',
 })
 export class NavComponent {

@@ -13,7 +13,20 @@ import {NavComponent} from './components/nav/nav.component';
     SidebarComponent,
     NavComponent
   ],
-  templateUrl: './app.component.html',
+  template: `
+    <main>
+      <app-nav />
+      <h1>
+        <a routerLink="/">
+          {{ title() }}
+        </a>
+      </h1>
+      <div class="container">
+        <app-sidebar />
+        <router-outlet />
+      </div>
+    </main>
+  `,
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {

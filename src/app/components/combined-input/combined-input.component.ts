@@ -7,7 +7,22 @@ import {BookService} from '../../services/book.service';
   imports: [
     FormsModule
   ],
-  templateUrl: './combined-input.component.html',
+  template: `
+    <div class="combined_input">
+        <textarea
+            wrap="soft"
+            [(ngModel)]="content"
+        ></textarea>
+        <p>Please enter one ISBN per line</p>
+        <input
+            type="file"
+            accept=".csv,.txt"
+            (change)="onFileChange($event)"
+        />
+        <button (click)="addBatch()">Add batch</button>
+        <button (click)="onClose()">Close</button>
+    </div>
+  `,
   styleUrl: './combined-input.component.css',
 })
 export class CombinedInputComponent {

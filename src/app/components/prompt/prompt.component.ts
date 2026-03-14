@@ -3,7 +3,25 @@ import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-prompt-component',
-  templateUrl: './prompt.component.html',
+  template: `
+    @if (open) {
+      <div class="dialog_overlay">
+        <div class="dialog-box">
+          <h2>{{ title }}</h2>
+          <p>{{ message }}</p>
+          <input type="text" [(ngModel)]="inputValue"/>
+          <div>
+            <button (click)="onClick()">
+              Submit
+            </button>
+            <button (click)="handleCancel()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  `,
   imports: [
     FormsModule
   ]

@@ -4,7 +4,14 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-sidebar-entry',
   imports: [],
-  templateUrl: './sidebar-entry.component.html',
+  template: `
+    <div class="shelf_entry" (click)="goToShelf()">
+        <span class="shelf_wrapper">
+            <p class="shelf_name">{{ name }}</p>
+            <p class="count">{{ count }}</p>
+        </span>
+    </div>
+  `,
   styleUrl: './sidebar-entry.component.css',
 })
 export class SidebarEntryComponent {

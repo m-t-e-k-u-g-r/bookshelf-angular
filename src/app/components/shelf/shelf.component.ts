@@ -7,7 +7,28 @@ import {ActivatedRoute} from '@angular/router';
 @Component({
   selector: 'app-shelf',
   imports: [BookComponent],
-  templateUrl: './shelf.component.html',
+  template: `
+    <div>
+      <h2>@if (shelfId) {
+        {{ shelfId }}
+      } @else {
+        {{ shelf() }}
+      }</h2>
+      <section class="shelf">
+        @if (shelfId !== undefined) {
+          @for (book of shelfService.shelvedBooks(); track book.isbn) {
+            @if (shelfId == book.shelf) {
+              <app-book [book]="book"/>
+            }
+          }
+        } @else {
+          @for (book of bookService.books(); track book.isbn) {
+            <app-book [book]="book"/>
+          }
+        }
+      </section>
+    </div>
+  `,
   styleUrl: './shelf.component.css',
 })
 export class ShelfComponent implements OnInit {

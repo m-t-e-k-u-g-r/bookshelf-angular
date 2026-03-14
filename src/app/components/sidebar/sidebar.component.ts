@@ -6,7 +6,10 @@ import {AccordionItemComponent} from '../accordion-item/accordion-item.component
   imports: [
     AccordionItemComponent
   ],
-  templateUrl: './sidebar.component.html',
+  template: `
+    <app-accordion-body title="Shelves">
+    </app-accordion-body>
+  `,
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {}

@@ -10,13 +10,13 @@ export type MenuItem = {
   imports: [],
   template: `
     <div>
-      <button (click)="toggle()">
+      <button (click)="toggle()" class="kebab-button">
         &#8942;
       </button>
       @if (open()) {
-        <ul class="kebab-button">
+        <ul class="kebab-menu">
           @for (item of items; track item.label) {
-            <li (click)="item.action()">
+            <li (click)="onItemClick(item)">
               {{ item.label }}
             </li>
           }
@@ -29,6 +29,10 @@ export type MenuItem = {
 export class KebabMenuComponent {
   @Input() items!: MenuItem[];
   open = signal(false);
+
+  onItemClick(item: MenuItem) {
+    item.action();
+  }
 
   toggle() {
     this.open.update(o => !o);

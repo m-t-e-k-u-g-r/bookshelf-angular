@@ -1,40 +1,35 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, effect} from '@angular/core';
 import {BookService} from './services/book.service';
 import {ShelfService} from './services/shelf.service';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import {SidebarComponent} from './components/sidebar/sidebar.component';
-import {NavComponent} from './components/nav/nav.component';
+import {RouterOutlet} from '@angular/router';
+import {AuthService} from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   imports: [
-    RouterOutlet,
-    RouterLink,
-    SidebarComponent,
-    NavComponent
+    RouterOutlet
   ],
   template: `
     <main>
-      <app-nav />
-      <h1>
-        <a routerLink="/">
-          {{ title() }}
-        </a>
-      </h1>
-      <div class="container">
-        <app-sidebar />
-        <router-outlet />
-      </div>
+      <router-outlet />
     </main>
   `,
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
-  title = signal('Bookshelf (Angular)');
+export class AppComponent {
   bookService = inject(BookService);
   shelfService = inject(ShelfService);
+  private authService = inject(AuthService);
 
-  ngOnInit() {
+  constructor() {
+    effect(() => {
+      if (this.authService.isLoggedIn()) {
+        this.loadData();
+      }
+    });
+  }
+
+  private loadData() {
     this.bookService.getBooks();
     this.shelfService.getShelvedBooks();
     this.shelfService.getAllShelves();

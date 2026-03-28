@@ -1,7 +1,11 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {environment} from '../../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
-import {catchError, tap, throwError} from 'rxjs';
+import {catchError, switchMap, tap, throwError} from 'rxjs';
+
+type refreshResponse = {
+  accessToken: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +14,19 @@ export class AuthService {
   baseUrl = environment.apiUrl + 'auth';
   http = inject(HttpClient);
   isLoggedIn = signal<boolean>(false);
+  accessToken = signal<string | null>(null);
+
+  getAccessToken() {
+    return this.accessToken();
+  }
+
+  checkAuth() {
+    return this.http.get(this.baseUrl + '/me', { withCredentials: true })
+      .subscribe({
+        next: () => this.isLoggedIn.set(true),
+        error: () => this.isLoggedIn.set(false)
+      })
+  }
 
   signup(email: string, password: string) {
     return this.http.post(this.baseUrl + '/signup',
@@ -37,6 +54,7 @@ export class AuthService {
         withCredentials: true
       }
     ).pipe(
+      switchMap(() => this.refresh()),
       tap(() => {
         this.isLoggedIn.set(true);
       }),
@@ -47,10 +65,14 @@ export class AuthService {
     );
   }
 
-  refresh(refreshToken: string) {
-    return this.http.post(this.baseUrl + '/refresh',
-      { refreshToken: refreshToken}
+  refresh() {
+    return this.http.post<{ accessToken: string }>(this.baseUrl + '/refresh', {},
+      { withCredentials: true }
     ).pipe(
+      tap(res => {
+        this.accessToken.set(res.accessToken);
+        this.isLoggedIn.set(true);
+      }),
       catchError(err => {
         console.error('Failed to refresh token:', err);
         return throwError(() => err);

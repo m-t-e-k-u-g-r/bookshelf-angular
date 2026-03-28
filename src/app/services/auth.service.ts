@@ -3,10 +3,6 @@ import {environment} from '../../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
 import {catchError, switchMap, tap, throwError} from 'rxjs';
 
-type refreshResponse = {
-  accessToken: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -18,14 +14,6 @@ export class AuthService {
 
   getAccessToken() {
     return this.accessToken();
-  }
-
-  checkAuth() {
-    return this.http.get(this.baseUrl + '/me', { withCredentials: true })
-      .subscribe({
-        next: () => this.isLoggedIn.set(true),
-        error: () => this.isLoggedIn.set(false)
-      })
   }
 
   signup(email: string, password: string) {

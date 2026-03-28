@@ -1,7 +1,7 @@
 import {Component, inject, effect} from '@angular/core';
 import {BookService} from './services/book.service';
 import {ShelfService} from './services/shelf.service';
-import {RouterOutlet} from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import {AuthService} from './services/auth.service';
 
 @Component({
@@ -20,6 +20,20 @@ export class AppComponent {
   bookService = inject(BookService);
   shelfService = inject(ShelfService);
   private authService = inject(AuthService);
+  private router = inject(Router);
+
+  ngOnInit() {
+    this.authService.refresh().subscribe({
+      next: () => {
+        if (this.router.url === '/login') {
+          this.router.navigate(['/']);
+        }
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+      }
+    })
+  }
 
   constructor() {
     effect(() => {

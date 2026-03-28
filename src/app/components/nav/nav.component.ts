@@ -2,6 +2,8 @@ import {Component, ElementRef, inject, signal, ViewChild} from '@angular/core';
 import {PromptComponent} from '../prompt/prompt.component';
 import {BookService} from '../../services/book.service';
 import {CombinedInputComponent} from '../combined-input/combined-input.component';
+import {AuthService} from '../../services/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -17,6 +19,9 @@ import {CombinedInputComponent} from '../combined-input/combined-input.component
         </button>
         <button (click)="openDialog()">
           Add Batch
+        </button>
+        <button (click)="logout()">
+          &#xf08b;
         </button>
       </nav>
       <app-prompt-component
@@ -37,13 +42,21 @@ import {CombinedInputComponent} from '../combined-input/combined-input.component
 })
 export class NavComponent {
   bookService = inject(BookService);
+  authService = inject(AuthService);
+  router = inject(Router);
   promptOpen = signal(false);
   @ViewChild('combinedInput') dialog!: ElementRef<HTMLDialogElement>;
+
+  logout() {
+    console.log('Logging out');
+    this.authService.logout().subscribe({
+      next: () => {this.router.navigate(['/login'])},
+    });
+  }
 
   openPrompt() {
     this.promptOpen.set(true);
   }
-
   openDialog() {
     this.dialog.nativeElement.showModal();
   }
@@ -63,7 +76,6 @@ export class NavComponent {
   onClose() {
     this.promptOpen.set(false);
   }
-
   onCloseDialog() {
     this.dialog.nativeElement.close();
   }

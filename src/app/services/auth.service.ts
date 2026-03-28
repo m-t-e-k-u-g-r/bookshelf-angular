@@ -68,11 +68,11 @@ export class AuthService {
     )
   }
 
-  logout(refreshToken: string) {
-    return this.http.delete(this.baseUrl + '/logout',
-      { body: { refreshToken: refreshToken } }
-    ).pipe(
+  logout() {
+    return this.http.delete(this.baseUrl + '/logout').
+    pipe(
       tap(() => {
+        this.accessToken.set(null);
         this.isLoggedIn.set(false);
       }),
       catchError(err => {

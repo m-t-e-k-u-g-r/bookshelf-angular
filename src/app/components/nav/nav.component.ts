@@ -80,7 +80,7 @@ export class NavComponent {
   @ViewChild('combinedInput') dialog!: ElementRef<HTMLDialogElement>;
   @ViewChild('exportDialog') exportDialog!: ElementRef<HTMLDialogElement>;
   exportableAttributes = ['isbn', 'isbn_h', 'title', 'author', 'publish_year', 'read_status'];
-  exportFormats = ['json'];
+  exportFormats = ['json', 'csv'];
   attributes_to_export = signal<string[]>([]);
 
   selectAttribute(attribute: string, checked: boolean) {
@@ -115,6 +115,35 @@ export class NavComponent {
       a.download = `${date}_books.json`;
       a.click();
       URL.revokeObjectURL(url);
+    }
+    if (format === 'csv') {
+      const columnNames = Object.keys(filteredData[0]);
+      let csvContent = columnNames.join(',') + '\n';
+      let rows: string[] = [];
+
+      filteredData.forEach((e) => {
+        let values: string[] = [];
+
+        columnNames.forEach((k) => {
+          let val = e[k];
+
+          if (val !== undefined && val !== null) {
+            val = String(val);
+          } else {
+            val = '';
+          }
+          values.push(val);
+        });
+        rows.push(values.join(','));
+      });
+      csvContent += rows.join('\n');
+
+      const blob = new Blob([csvContent], {type: 'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${date}_books.csv`;
+      a.click();
     }
     this.closeExport();
   }

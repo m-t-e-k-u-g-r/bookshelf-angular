@@ -99,6 +99,7 @@ export class BookComponent {
     this.bookService
       .deleteBook(this.book.title, this.book.isbn)?.subscribe({
       next: () => {
+        this.bookService.getBooks();
         console.log(`Book deleted`);
       },
       error: (err) => {

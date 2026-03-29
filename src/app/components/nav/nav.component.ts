@@ -27,7 +27,7 @@ import {FormsModule} from '@angular/forms';
           Export
         </button>
         <button (click)="logout()">
-          &#xf08b;
+          <i class="fas fa-sign-out-alt"></i>
         </button>
       </nav>
       <app-prompt-component

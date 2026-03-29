@@ -1,0 +1,36 @@
+:root {
+  --kebab-menu-bg: #ffffff;
+  --kebab-menu-border: #ccc;
+  --kebab-menu-shadow: rgba(0,0,0,0.15);
+  --kebab-menu-hover: #f0f0f0;
+  --kebab-button-color: #000000;
+}
+
+.kebab-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--kebab-button-color);
+  margin-top: 0.5rem;
+}
+
+.kebab-menu {
+  position: relative;
+  bottom: 100%;
+  left: 1rem;
+  margin: 0;
+  padding: 0.5rem 0;
+  list-style: none;
+  background: var(--kebab-menu-bg);
+  border: 1px solid var(--kebab-menu-border);
+  box-shadow: 0 2px 8px var(--kebab-menu-shadow);
+}
+
+.kebab-menu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.kebab-menu li:hover {
+  background-color: var(--kebab-menu-hover);
+}

@@ -5,12 +5,14 @@ import {CombinedInputComponent} from '../combined-input/combined-input.component
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
 import {formatDateYYYY_MM_DD} from '../../utils/utils';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-nav',
   imports: [
     PromptComponent,
-    CombinedInputComponent
+    CombinedInputComponent,
+    FormsModule
   ],
   template: `
     <div>
@@ -42,13 +44,22 @@ import {formatDateYYYY_MM_DD} from '../../utils/utils';
       </dialog>
       <dialog #exportDialog>
         <h3>Export data</h3>
-        <select>
+        <select [(ngModel)]="selectedFormat">
           @for (format of exportFormats; track format) {
             <option value="{{ format }}">
               {{ format }}
             </option>
           }
         </select>
+        @if (selectedFormat === 'csv') {
+          <label>
+            Delimiter
+            <input
+              type="text"
+              [(ngModel)]="delimiter"
+            />
+          </label>
+        }
         <div class="export_options">
           @for (a of exportableAttributes; track a) {
             <label>
@@ -82,6 +93,8 @@ export class NavComponent {
   exportableAttributes = ['isbn', 'isbn_h', 'title', 'author', 'publish_year', 'read_status'];
   exportFormats = ['json', 'csv'];
   attributes_to_export = signal<string[]>([]);
+  delimiter = ',';
+  selectedFormat = 'json';
 
   selectAttribute(attribute: string, checked: boolean) {
     if (checked) {
@@ -99,26 +112,22 @@ export class NavComponent {
   }
   export() {
     const date = formatDateYYYY_MM_DD();
-    const format = this.exportDialog.nativeElement.querySelector('select')?.value as string;
     const data = this.bookService.books();
     const filteredData = data.map(b =>
       Object.fromEntries(
         Object.entries(b).filter(([key]) => this.attributes_to_export().includes(key))
       )
     );
-    if (format === 'json') {
+    let blob: Blob;
+    const a = document.createElement('a');
+    if (this.selectedFormat === 'json') {
       const json = JSON.stringify(filteredData, null, 2);
-      const blob = new Blob([json], {type: 'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
+
+      blob = new Blob([json], {type: 'application/json'});
       a.download = `${date}_books.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-    if (format === 'csv') {
+    } else {
       const columnNames = Object.keys(filteredData[0]);
-      let csvContent = columnNames.join(',') + '\n';
+      let csvContent = columnNames.join(this.delimiter == '' ? ',' : this.delimiter) + '\n';
       let rows: string[] = [];
 
       filteredData.forEach((e) => {
@@ -134,17 +143,17 @@ export class NavComponent {
           }
           values.push(val);
         });
-        rows.push(values.join(','));
+        rows.push(values.join(this.delimiter));
       });
       csvContent += rows.join('\n');
 
-      const blob = new Blob([csvContent], {type: 'text/csv'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
+      blob = new Blob([csvContent], {type: 'text/csv'});
       a.download = `${date}_books.csv`;
-      a.click();
     }
+    const url = URL.createObjectURL(blob);
+    a.href = url;
+    a.click();
+    URL.revokeObjectURL(url);
     this.closeExport();
   }
 

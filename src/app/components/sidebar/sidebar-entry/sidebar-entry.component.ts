@@ -1,15 +1,32 @@
-import {Component, Input} from '@angular/core';
+import {Component, inject, Input, signal} from '@angular/core';
 import {Router} from '@angular/router';
+import {KebabMenuComponent, MenuItem} from '../../kebab-menu/kebab-menu.component';
+import {PromptComponent} from '../../prompt/prompt.component';
+import {ShelfService} from '../../../services/shelf.service';
 
 @Component({
   selector: 'app-sidebar-entry',
-  imports: [],
+  imports: [
+    KebabMenuComponent,
+    PromptComponent
+  ],
   template: `
     <div class="shelf_entry" (click)="goToShelf()">
         <span class="shelf_wrapper">
             <p class="shelf_name">{{ name }}</p>
             <p class="count">{{ count }}</p>
+            <div class="shelf-menu">
+              <app-kebab-menu
+                [items]="menuItems"
+              />
+            </div>
         </span>
+        <app-prompt-component
+            [open]="promptOpen()"
+            (close)="onClose()"
+            [title]="'Rename shelf'"
+            (submit)="handleRenameShelf($event)"
+        />
     </div>
   `,
   styleUrl: './sidebar-entry.component.css',
@@ -17,10 +34,35 @@ import {Router} from '@angular/router';
 export class SidebarEntryComponent {
   @Input() name!: string;
   @Input() count!: number;
+  promptOpen = signal<boolean>(false);
+  shelfService = inject(ShelfService);
+  menuItems: MenuItem[] = [
+    {label: 'Rename shelf', action: () => {this.openPrompt()}}
+  ]
 
   constructor(private router: Router) {}
 
   goToShelf() {
     this.router.navigate(['/s', this.name])
+  }
+
+  handleRenameShelf(newShelfName: string) {
+    if (!newShelfName || newShelfName == '') return;
+    this.shelfService.renameShelf(this.name, newShelfName)
+      .subscribe({
+        next: () => {
+          console.log('Shelf renamed');
+        },
+        error: (err) => {
+          console.error('Failed to rename shelf', err);
+        }
+      });
+  }
+
+  openPrompt() {
+    this.promptOpen.set(true);
+  }
+  onClose() {
+    this.promptOpen.set(false);
   }
 }

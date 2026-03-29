@@ -22,6 +22,7 @@ import {FormsModule} from '@angular/forms';
       </div>
     }
   `,
+  styleUrl: './prompt.component.css',
   imports: [
     FormsModule
   ]
@@ -37,7 +38,6 @@ export class PromptComponent {
   inputValue = '';
 
   onClick() {
-    console.log('submit clicked');
     this.submit.emit(this.inputValue);
     this.close.emit();
   }

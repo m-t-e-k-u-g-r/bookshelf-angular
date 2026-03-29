@@ -30,19 +30,21 @@ import {Router} from '@angular/router';
       <button type="submit">
         {{ isLogin ? 'Login' : 'Signup' }}
       </button>
+      @if (isLogin) {
+        <p>No account?
+            <a (click)="toggleMode()">
+                Sign up
+            </a>
+        </p>
+      }
+      @if (!isLogin) {
+        <p>Already have an account?
+            <a (click)="toggleMode()">
+                Log in
+            </a>
+        </p>
+      }
     </form>
-    @if (isLogin) {
-      <p>No account?</p>
-      <a (click)="toggleMode()">
-        Sign up
-      </a>
-    }
-    @if (!isLogin) {
-      <p>Already have an account?</p>
-      <a (click)="toggleMode()">
-        Log in
-      </a>
-    }
   `,
   styleUrl: './login.component.css',
 })

@@ -37,7 +37,18 @@ export class SidebarEntryComponent {
   promptOpen = signal<boolean>(false);
   shelfService = inject(ShelfService);
   menuItems: MenuItem[] = [
-    {label: 'Rename shelf', action: () => {this.openPrompt()}}
+    {label: 'Rename shelf', action: () => {this.openPrompt()}},
+    {label: 'Delete shelf', action: () => {
+      this.shelfService.deleteShelf(this.name)
+        .subscribe({
+          next: () => {
+            this.shelfService.getSidebarData();
+            this.router.navigate(['']);
+            console.log('Shelf deleted');
+          },
+          error: (err) => {console.error('Failed to delete shelf', err)}
+        });
+    }},
   ]
 
   constructor(private router: Router) {}
@@ -51,6 +62,7 @@ export class SidebarEntryComponent {
     this.shelfService.renameShelf(this.name, newShelfName)
       .subscribe({
         next: () => {
+          this.shelfService.getSidebarData();
           console.log('Shelf renamed');
         },
         error: (err) => {

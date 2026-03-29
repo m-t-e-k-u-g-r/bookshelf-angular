@@ -57,6 +57,7 @@ export class AccordionItemComponent {
     if (!shelfName || shelfName == '') return;
     this.shelfService.createShelf(shelfName).subscribe({
       next: () => {
+        this.shelfService.getSidebarData();
         console.log('Shelf created');
       },
       error: (err) => {

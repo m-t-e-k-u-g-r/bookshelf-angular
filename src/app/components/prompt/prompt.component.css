@@ -1,7 +1,3 @@
-root {
-  --dialog-background: #f9f9f9;
-}
-
 .dialog_overlay {
   z-index: 1000;
   position: fixed;
@@ -11,6 +7,6 @@ root {
   gap: 10px;
   width: 250px;
   padding: 20px;
-  background-color: var(--dialog-background);
+  background-color: var(--dialog-bg);
   border-radius: 8px;
 }

@@ -1,8 +1,3 @@
-:root {
-  --shelf-entry-hover: #f8f9fa;
-  --shelf-entry-border: #eee;
-}
-
 .shelf {
   margin: var(--primary-spacing) auto;
   padding: var(--primary-spacing);

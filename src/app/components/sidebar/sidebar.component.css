@@ -1,7 +1,3 @@
-:root {
-  --sidebar-bg-color: #f9f9f9;
-}
-
 .sideBar {
   padding: 1rem;
   background-color: var(--sidebar-bg-color);

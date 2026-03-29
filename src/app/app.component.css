@@ -1,15 +1,3 @@
-:root {
-  --min-font-size: 1rem;
-  --max-font-size: 1.5rem;
-  --primary-spacing: clamp(0.5rem, 2vw, 2rem);
-  --border-color: rgb(164, 164, 164);
-  --bg-color: #ffffff;
-  --text-color: #000000;
-  --secondary-bg-color: #eaeaea;
-  --button-bg: #dddddd;
-  --button-text: #000000;
-}
-
 body {
   padding: var(--primary-spacing);
   font-size: var(--min-font-size);

@@ -1,11 +1,3 @@
-:root {
-  --kebab-menu-bg: #ffffff;
-  --kebab-menu-border: #ccc;
-  --kebab-menu-shadow: rgba(0,0,0,0.15);
-  --kebab-menu-hover: #f0f0f0;
-  --kebab-button-color: #000000;
-}
-
 .kebab-button {
   background: none;
   border: none;

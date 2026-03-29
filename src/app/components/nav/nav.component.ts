@@ -4,6 +4,7 @@ import {BookService} from '../../services/book.service';
 import {CombinedInputComponent} from '../combined-input/combined-input.component';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
+import {formatDateYYYY_MM_DD} from '../../utils/utils';
 
 @Component({
   selector: 'app-nav',
@@ -19,6 +20,9 @@ import {Router} from '@angular/router';
         </button>
         <button (click)="openDialog()">
           Add Batch
+        </button>
+        <button (click)="openExport()">
+          Export
         </button>
         <button (click)="logout()">
           &#xf08b;
@@ -36,6 +40,34 @@ import {Router} from '@angular/router';
           (close)="onCloseDialog()"
         />
       </dialog>
+      <dialog #exportDialog>
+        <h3>Export data</h3>
+        <select>
+          @for (format of exportFormats; track format) {
+            <option value="{{ format }}">
+              {{ format }}
+            </option>
+          }
+        </select>
+        <div class="export_options">
+          @for (a of exportableAttributes; track a) {
+            <label>
+              <input
+                type="checkbox"
+                [checked]="attributes_to_export().includes(a)"
+                (change)="selectAttribute(a, !attributes_to_export().includes(a))"
+              />
+              {{ a }}
+            </label>
+          }
+        </div>
+        <button (click)="export()">
+          Export
+        </button>
+        <button (click)="closeExport()">
+          Close
+        </button>
+      </dialog>
     </div>
   `,
   styleUrl: './nav.component.css',
@@ -46,6 +78,18 @@ export class NavComponent {
   router = inject(Router);
   promptOpen = signal(false);
   @ViewChild('combinedInput') dialog!: ElementRef<HTMLDialogElement>;
+  @ViewChild('exportDialog') exportDialog!: ElementRef<HTMLDialogElement>;
+  exportableAttributes = ['isbn', 'isbn_h', 'title', 'author', 'publish_year', 'read_status'];
+  exportFormats = ['json'];
+  attributes_to_export = signal<string[]>([]);
+
+  selectAttribute(attribute: string, checked: boolean) {
+    if (checked) {
+      if (!this.attributes_to_export().includes(attribute)) this.attributes_to_export.set([...this.attributes_to_export(), attribute]);
+    } else {
+      this.attributes_to_export.set(this.attributes_to_export().filter(a => a !== attribute));
+    }
+  }
 
   logout() {
     console.log('Logging out');
@@ -53,12 +97,36 @@ export class NavComponent {
       next: () => {this.router.navigate(['/login'])},
     });
   }
+  export() {
+    const date = formatDateYYYY_MM_DD();
+    const format = this.exportDialog.nativeElement.querySelector('select')?.value as string;
+    const data = this.bookService.books();
+    const filteredData = data.map(b =>
+      Object.fromEntries(
+        Object.entries(b).filter(([key]) => this.attributes_to_export().includes(key))
+      )
+    );
+    if (format === 'json') {
+      const json = JSON.stringify(filteredData, null, 2);
+      const blob = new Blob([json], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${date}_books.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    this.closeExport();
+  }
 
   openPrompt() {
     this.promptOpen.set(true);
   }
   openDialog() {
     this.dialog.nativeElement.showModal();
+  }
+  openExport() {
+    this.exportDialog.nativeElement.showModal();
   }
 
   addBook(isbn: string) {
@@ -78,5 +146,8 @@ export class NavComponent {
   }
   onCloseDialog() {
     this.dialog.nativeElement.close();
+  }
+  closeExport() {
+    this.exportDialog.nativeElement.close();
   }
 }

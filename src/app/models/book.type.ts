@@ -5,6 +5,7 @@ export interface Book {
   author: string;
   publish_year: number;
   img_url: string;
+  read_status: boolean;
 }
 
 export interface BookWithShelf extends Book {

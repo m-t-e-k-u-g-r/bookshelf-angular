@@ -3,10 +3,12 @@ import {BookComponent} from '../book/book.component';
 import {BookService} from '../../services/book.service';
 import {ShelfService} from '../../services/shelf.service';
 import {ActivatedRoute} from '@angular/router';
+import {FormsModule} from '@angular/forms';
+import {Book} from '../../models/book.type';
 
 @Component({
   selector: 'app-shelf',
-  imports: [BookComponent],
+  imports: [BookComponent, FormsModule],
   template: `
     <div>
       <h2>@if (shelfId) {
@@ -14,15 +16,21 @@ import {ActivatedRoute} from '@angular/router';
       } @else {
         {{ shelf() }}
       }</h2>
+      <div class="menu">
+        <select class="select" [(ngModel)]="sortBy" (ngModelChange)="sortBy.set($event)">
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+        </select>
+      </div>
       <section class="shelf">
         @if (shelfId !== undefined) {
-          @for (book of shelfService.shelvedBooks(); track book.isbn) {
+          @for (book of sortedBooks; track book.isbn) {
             @if (shelfId == book.shelf) {
               <app-book [book]="book"/>
             }
           }
         } @else {
-          @for (book of bookService.books(); track book.isbn) {
+          @for (book of sortedBooks; track book.isbn) {
             <app-book [book]="book"/>
           }
         }
@@ -36,6 +44,18 @@ export class ShelfComponent implements OnInit {
   shelfService = inject(ShelfService);
   shelf = signal('Books')
   shelfId?: string;
+  sortBy = signal<'title' | 'author'>('title');
+
+  get sortedBooks(): (Book & { shelf?: string })[] {
+    let books: (Book & { shelf?: string })[] = this.shelfId !== undefined
+      ? this.shelfService.shelvedBooks().filter(b => b.shelf === this.shelfId)
+      : this.bookService.books();
+
+    return [...books].sort((a, b) => {
+      const key = this.sortBy();
+      return a[key].localeCompare(b[key]);
+    });
+  }
 
   constructor(private route: ActivatedRoute) {}
 

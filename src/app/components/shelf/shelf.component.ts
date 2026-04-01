@@ -5,6 +5,7 @@ import {ShelfService} from '../../services/shelf.service';
 import {ActivatedRoute} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {Book} from '../../models/book.type';
+import {SharedService} from '../../services/shared.service';
 
 @Component({
   selector: 'app-shelf',
@@ -23,11 +24,19 @@ import {Book} from '../../models/book.type';
         </select>
       </div>
       <section class="shelf">
-        @if (shelfId !== undefined) {
-          @for (book of sortedBooks; track book.isbn) {
-            @if (shelfId == book.shelf) {
-              <app-book [book]="book"/>
+        @if (shelfId == undefined) {
+          @if (sortedBooks.length !== 0) {
+            @for (book of sortedBooks; track book.isbn) {
+              @if (shelfId == book.shelf) {
+                <app-book [book]="book"/>
+              }
             }
+          } @else {
+            <h2>No books yet.
+              <a (click)="this.sharedService.updateBookPrompt(true)">
+                Add Book
+              </a>
+            </h2>
           }
         } @else {
           @for (book of sortedBooks; track book.isbn) {
@@ -42,6 +51,7 @@ import {Book} from '../../models/book.type';
 export class ShelfComponent implements OnInit {
   bookService = inject(BookService);
   shelfService = inject(ShelfService);
+  sharedService = inject(SharedService);
   shelf = signal('Books')
   shelfId?: string;
   sortBy = signal<'title' | 'author'>('title');

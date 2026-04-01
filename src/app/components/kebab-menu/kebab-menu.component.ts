@@ -9,7 +9,7 @@ export type MenuItem = {
   selector: 'app-kebab-menu',
   imports: [],
   template: `
-    <div>
+    <div class="kebab-wrapper">
       <button (click)="toggle()" class="kebab-button">
         &#8942;
       </button>

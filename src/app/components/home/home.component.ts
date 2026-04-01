@@ -14,7 +14,7 @@ import {ShelfComponent} from '../shelf/shelf.component';
   ],
   template: `
     <app-nav />
-    <h1>
+    <h1 id="title">
       <a routerLink="/">
         {{ title() }}
       </a>

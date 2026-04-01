@@ -19,8 +19,10 @@ import {BookService} from '../../services/book.service';
             accept=".csv,.txt"
             (change)="onFileChange($event)"
         />
-        <button (click)="addBatch()">Add batch</button>
-        <button (click)="onClose()">Close</button>
+        <div class="button-container">
+          <button (click)="addBatch()">Add batch</button>
+          <button (click)="onClose()">Close</button>
+        </div>
     </div>
   `,
   styleUrl: './combined-input.component.css',

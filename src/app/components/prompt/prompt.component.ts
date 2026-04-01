@@ -10,7 +10,7 @@ import {FormsModule} from '@angular/forms';
           <h2>{{ title }}</h2>
           <p>{{ message }}</p>
           <input type="text" [(ngModel)]="inputValue"/>
-          <div>
+          <div class="button-container">
             <button (click)="onClick()">
               Submit
             </button>

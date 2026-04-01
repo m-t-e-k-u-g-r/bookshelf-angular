@@ -10,6 +10,10 @@
   box-sizing: border-box;
 }
 
+h2 > a {
+  color: var(--link-color);
+}
+
 @media (min-width: 576px) {
   .shelf {
     grid-template-columns: repeat(2, 1fr);

@@ -20,7 +20,7 @@ import {ShelfService} from '../../services/shelf.service';
         width="400"
         alt="\`{{ book.title }} by {{ book.author }}\`"
       />
-      <div class="book-content">
+      <div class="book_content">
         <p class="title">{{ book.title }}</p>
         <div class="meta">
           <p class="author">{{ book.author }}</p>
@@ -34,9 +34,9 @@ import {ShelfService} from '../../services/shelf.service';
       <dialog #shelfSelection>
         <div>
           <h3>Edit shelves for "{{book.title}}"</h3>
-          <div>
+          <div class="dialog_body">
             @for (shelf of shelfService.shelfNames(); track shelf) {
-              <div>
+              <div style="margin-bottom: 10px">
                 <label>
                   <input
                     #checkbox

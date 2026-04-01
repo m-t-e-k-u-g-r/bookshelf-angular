@@ -9,6 +9,11 @@ nav {
   gap: 0.5rem;
 }
 
+.export_dialog {
+  padding: 1rem;
+  gap: 1rem;
+}
+
 .export_options {
   display: flex;
   flex-direction: column;
@@ -19,7 +24,7 @@ nav {
     position: sticky;
     top: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 100;
   }
 }
 

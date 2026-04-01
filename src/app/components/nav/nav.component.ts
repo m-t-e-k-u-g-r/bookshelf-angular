@@ -6,6 +6,7 @@ import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
 import {formatDateYYYY_MM_DD} from '../../utils/utils';
 import {FormsModule} from '@angular/forms';
+import {SharedService} from '../../services/shared.service';
 
 @Component({
   selector: 'app-nav',
@@ -42,7 +43,7 @@ import {FormsModule} from '@angular/forms';
           (close)="onCloseDialog()"
         />
       </dialog>
-      <dialog #exportDialog>
+      <dialog #exportDialog class="export_dialog">
         <h3>Export data</h3>
         <select [(ngModel)]="selectedFormat">
           @for (format of exportFormats; track format) {
@@ -52,9 +53,11 @@ import {FormsModule} from '@angular/forms';
           }
         </select>
         @if (selectedFormat === 'csv') {
+          <br/>
           <label>
             Delimiter
             <input
+              style="width: 50px;"
               type="text"
               [(ngModel)]="delimiter"
             />
@@ -72,12 +75,14 @@ import {FormsModule} from '@angular/forms';
             </label>
           }
         </div>
-        <button (click)="export()">
-          Export
-        </button>
-        <button (click)="closeExport()">
-          Close
-        </button>
+        <div class="button-container">
+          <button (click)="export()">
+            Export
+          </button>
+          <button (click)="closeExport()">
+            Close
+          </button>
+        </div>
       </dialog>
     </div>
   `,
@@ -86,8 +91,9 @@ import {FormsModule} from '@angular/forms';
 export class NavComponent {
   bookService = inject(BookService);
   authService = inject(AuthService);
+  sharedService = inject(SharedService);
   router = inject(Router);
-  promptOpen = signal(false);
+  promptOpen = this.sharedService.addBookPromptOpen;
   @ViewChild('combinedInput') dialog!: ElementRef<HTMLDialogElement>;
   @ViewChild('exportDialog') exportDialog!: ElementRef<HTMLDialogElement>;
   exportableAttributes = ['isbn', 'isbn_h', 'title', 'author', 'publish_year', 'read_status'];
@@ -158,7 +164,7 @@ export class NavComponent {
   }
 
   openPrompt() {
-    this.promptOpen.set(true);
+    this.sharedService.updateBookPrompt(true);
   }
   openDialog() {
     this.dialog.nativeElement.showModal();
@@ -176,11 +182,11 @@ export class NavComponent {
         console.error('Failed to add book', err);
       }
     });
-    this.promptOpen.set(false);
+    this.sharedService.updateBookPrompt(false);
   }
 
   onClose() {
-    this.promptOpen.set(false);
+    this.sharedService.updateBookPrompt(false);
   }
   onCloseDialog() {
     this.dialog.nativeElement.close();

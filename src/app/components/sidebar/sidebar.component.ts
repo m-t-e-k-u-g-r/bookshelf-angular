@@ -7,8 +7,9 @@ import {AccordionItemComponent} from '../accordion-item/accordion-item.component
     AccordionItemComponent
   ],
   template: `
-    <app-accordion-body title="Shelves">
-    </app-accordion-body>
+    <div class="sideBar">
+      <app-accordion-body title="Shelves"/>
+    </div>
   `,
   styleUrl: './sidebar.component.css',
 })

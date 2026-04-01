@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {formatDateYYYY_MM_DD} from '../../utils/utils';
 import {FormsModule} from '@angular/forms';
 import {SharedService} from '../../services/shared.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -92,6 +93,7 @@ export class NavComponent {
   bookService = inject(BookService);
   authService = inject(AuthService);
   sharedService = inject(SharedService);
+  toastr = inject(ToastrService);
   router = inject(Router);
   promptOpen = this.sharedService.addBookPromptOpen;
   @ViewChild('combinedInput') dialog!: ElementRef<HTMLDialogElement>;
@@ -161,6 +163,7 @@ export class NavComponent {
     a.click();
     URL.revokeObjectURL(url);
     this.closeExport();
+    this.toastr.success('Export successful')
   }
 
   openPrompt() {

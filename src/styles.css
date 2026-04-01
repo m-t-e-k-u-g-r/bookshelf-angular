@@ -29,6 +29,10 @@
   --form-bg: #ffffff;
   --form-border: #ccc;
   --link-color: #007bff;
+  --toast-success: #28a745;
+  --toast-error: #dc3545;
+  --toast-info: #17a2b8;
+  --toast-warning: #ffc107;
 }
 
 body {
@@ -87,15 +91,40 @@ h3 {
   margin-bottom: 0.5rem;
 }
 
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background-color: var(--toast-bg);
-  color: var(--toast-text);
-  font-weight: bold;
-  padding: 1rem;
-  z-index: 100;
+.ngx-toastr {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  border-left: 6px solid;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+  opacity: 1 !important;
+}
+
+.toast-success {
+  border-left-color: var(--toast-success) !important;
+  .toast-progress {
+    background-color: var(--toast-success) !important;
+  }
+}
+
+.toast-error {
+  border-left-color: var(--toast-error) !important;
+  .toast-progress {
+    background-color: var(--toast-error) !important;
+  }
+}
+
+.toast-info {
+  border-left-color: var(--toast-info) !important;
+  .toast-progress {
+    background-color: var(--toast-info) !important;
+  }
+}
+
+.toast-warning {
+  border-left-color: var(--toast-warning) !important;
+  .toast-progress {
+    background-color: var(--toast-warning) !important;
+  }
 }
 
 textarea {

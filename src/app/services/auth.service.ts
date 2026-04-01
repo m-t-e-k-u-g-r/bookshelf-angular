@@ -2,6 +2,7 @@ import {inject, Injectable, signal} from '@angular/core';
 import {environment} from '../../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
 import {catchError, switchMap, tap, throwError} from 'rxjs';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import {catchError, switchMap, tap, throwError} from 'rxjs';
 export class AuthService {
   baseUrl = environment.apiUrl + 'auth';
   http = inject(HttpClient);
+  toastr = inject(ToastrService);
   isLoggedIn = signal<boolean>(false);
   accessToken = signal<string | null>(null);
 
@@ -26,9 +28,11 @@ export class AuthService {
     ).pipe(
       tap(() => {
         this.isLoggedIn.set(true);
+        this.toastr.success(`Registration successful for ${email}`, 'Success');
       }),
       catchError(err => {
         console.error('Failed to signup user:', err);
+        this.toastr.error(`Registration failed for ${email}`, 'Error');
         return throwError(() => err);
       })
     );
@@ -45,9 +49,11 @@ export class AuthService {
       switchMap(() => this.refresh()),
       tap(() => {
         this.isLoggedIn.set(true);
+        this.toastr.success(`Login successful as ${email}`, 'Success');
       }),
       catchError(err => {
         console.error('Failed to log in user:', err);
+        this.toastr.error(`Login failed for ${email}`, 'Error');
         return throwError(() => err);
       })
     );
@@ -62,10 +68,21 @@ export class AuthService {
         this.isLoggedIn.set(true);
       }),
       catchError(err => {
-        console.error('Failed to refresh token:', err);
+        switch(err.status) {
+          case 401:
+            console.error('Refresh called without a token (frontend bug)', err);
+            break;
+          case 403:
+            this.isLoggedIn.set(false);
+            this.accessToken.set(null);
+            this.toastr.warning('Please log in again', 'Session expired');
+            break;
+          default:
+            console.error('Failed to refresh token:', err);
+        }
         return throwError(() => err);
       })
-    )
+    );
   }
 
   logout() {
@@ -74,9 +91,11 @@ export class AuthService {
       tap(() => {
         this.accessToken.set(null);
         this.isLoggedIn.set(false);
+        this.toastr.info('Successfully logged out', 'Information');
       }),
       catchError(err => {
         console.error('Failed to log out:', err);
+        this.toastr.error('Logout failed', 'Error');
         return throwError(() => err);
       })
     );

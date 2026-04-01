@@ -3,9 +3,19 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor} from './interceptors/auth-interceptor';
+import {provideToastr} from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideToastr({
+      maxOpened: 5,
+      autoDismiss: true,
+      preventDuplicates: true,
+      countDuplicates: true,
+      positionClass: 'toast-bottom-left',
+      progressBar: true,
+      progressAnimation: 'decreasing',
+    }),
     provideHttpClient(
       withInterceptors([
         authInterceptor
